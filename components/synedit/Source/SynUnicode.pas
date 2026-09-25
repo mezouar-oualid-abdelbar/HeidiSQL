@@ -1595,67 +1595,15 @@ begin
 end;
 
 function WStrCopy(Dest: PWideChar; const Source: PWideChar): PWideChar;
-{$IFDEF SYN_COMPILER_16_UP}
 begin
-  Result := SysUtils.StrCopy(Dest, Source)
-{$ELSE}
-asm
-        PUSH    EDI
-        PUSH    ESI
-        MOV     ESI,EAX
-        MOV     EDI,EDX
-        MOV     ECX,0FFFFFFFFH
-        XOR     AX,AX
-        REPNE   SCASW
-        NOT     ECX
-        MOV     EDI,ESI
-        MOV     ESI,EDX
-        MOV     EDX,ECX
-        MOV     EAX,EDI
-        SHR     ECX,1
-        REP     MOVSD
-        MOV     ECX,EDX
-        AND     ECX,1
-        REP     MOVSW
-        POP     ESI
-        POP     EDI
-{$ENDIF}
+  Result := SysUtils.StrCopy(Dest, Source);
 end;
 
 function WStrLCopy(Dest: PWideChar; const Source: PWideChar; MaxLen: Cardinal): PWideChar;
-{$IFDEF SYN_COMPILER_16_UP}
+
 begin
   Result := SysUtils.StrLCopy(Dest, Source, MaxLen)
-{$ELSE}
-asm
-        PUSH    EDI
-        PUSH    ESI
-        PUSH    EBX
-        MOV     ESI,EAX
-        MOV     EDI,EDX
-        MOV     EBX,ECX
-        XOR     AX,AX
-        TEST    ECX,ECX
-        JZ      @@1
-        REPNE   SCASW
-        JNE     @@1
-        Inc     ECX
-@@1:    SUB     EBX,ECX
-        MOV     EDI,ESI
-        MOV     ESI,EDX
-        MOV     EDX,EDI
-        MOV     ECX,EBX
-        SHR     ECX,1
-        REP     MOVSD
-        MOV     ECX,EBX
-        AND     ECX,1
-        REP     MOVSW
-        STOSW
-        MOV     EAX,EDX
-        POP     EBX
-        POP     ESI
-        POP     EDI
-{$ENDIF}
+
 end;
 
 function WStrCat(Dest: PWideChar; const Source: PWideChar): PWideChar;
@@ -1728,24 +1676,24 @@ begin
       Inc(i);
       if c <= $7F then
       begin
-        Dest[count] := Char(c);
+        Dest[count] := AnsiChar(c);
         Inc(count);
       end
       else if c > $7FF then
       begin
         if count + 3 > MaxDestBytes then
           Break;
-        Dest[count] := Char($E0 or (c shr 12));
-        Dest[count+1] := Char($80 or ((c shr 6) and $3F));
-        Dest[count+2] := Char($80 or (c and $3F));
+        Dest[count] := AnsiChar($E0 or (c shr 12));
+        Dest[count+1] := AnsiChar($80 or ((c shr 6) and $3F));
+        Dest[count+2] := AnsiChar($80 or (c and $3F));
         Inc(count,3);
       end
       else //  $7F < Source[i] <= $7FF
       begin
         if count + 2 > MaxDestBytes then
           Break;
-        Dest[count] := Char($C0 or (c shr 6));
-        Dest[count+1] := Char($80 or (c and $3F));
+        Dest[count] := AnsiChar($C0 or (c shr 6));
+        Dest[count+1] := AnsiChar($80 or (c and $3F));
         Inc(count,2);
       end;
     end;
@@ -2231,7 +2179,6 @@ end;
 // byte to go from LSB to MSB and vice versa.
 // EAX contains address of string
 procedure StrSwapByteOrder(Str: PWideChar);
-{$IFDEF SYN_COMPILER_16_UP}
 var
   P: PWord;
 begin
@@ -2241,26 +2188,7 @@ begin
     P^ := MakeWord(HiByte(P^), LoByte(P^));
     Inc(P);
   end;
-{$ELSE}
-asm
-       PUSH    ESI
-       PUSH    EDI
-       MOV     ESI, EAX
-       MOV     EDI, ESI
-       XOR     EAX, EAX // clear high order byte to be able to use 32bit operand below
-@@1:
-       LODSW
-       OR      EAX, EAX
-       JZ      @@2
-       XCHG    AL, AH
-       STOSW
-       JMP     @@1
 
-
-@@2:
-       POP     EDI
-       POP     ESI
-{$ENDIF}
 end;
 
 // works like QuotedStr from SysUtils.pas but can insert any quotation character

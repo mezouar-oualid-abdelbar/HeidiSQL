@@ -750,14 +750,21 @@ begin
 end;
 
 function TSynMultiSyn.GetRange: Pointer;
+var
+  RangeValue: TRangeUNativeInt;
 begin
-  Result := nil;
-  FRangeProc(roGet, TRangeUNativeInt(Result));
+  RangeValue := TRangeUNativeInt(Result);
+  FRangeProc(roGet, RangeValue);
+  Result := Pointer(RangeValue);
 end;
 
 procedure TSynMultiSyn.SetRange(Value: Pointer);
+
+var
+  RangeValue: TRangeUNativeInt;
 begin
-  FRangeProc(roSet, TRangeUNativeInt(Value));
+  RangeValue := TRangeUNativeInt(Value);
+  FRangeProc(roSet, RangeValue);
 end;
 
 procedure TSynMultiSyn.NewRangeProc(Operation: TRangeOperation; var Range: TRangeUNativeInt);
@@ -824,8 +831,13 @@ begin
 end;
 
 procedure TSynMultiSyn.UserRangeProc(Operation: TRangeOperation; var Range: TRangeUNativeInt);
+var
+  RangePtr: Pointer;
 begin
-  OnCustomRange(Self, Operation, Pointer(Range));
+  RangePtr := Pointer(Range);
+
+  OnCustomRange(Self, Operation, RangePtr);
+
   if (Operation = roSet) and (DefaultHighlighter <> nil) then
     FTmpRange := DefaultHighlighter.GetRange;
 end;
