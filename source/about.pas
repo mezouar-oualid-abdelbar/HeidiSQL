@@ -165,7 +165,9 @@ end;
 
 function TAboutBox.GetDelphiVersion: string;
 begin
-  {$IF Defined(VER360)}
+  {$IF Defined(VER370)}
+    Result := '13';
+  {$ELSEIF Defined(VER360)}
     // Oldest/first official version where this gets used
     Result := '12';
   {$ELSEIF Defined(VER350)}

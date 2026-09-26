@@ -365,6 +365,7 @@ type
   // Return directory with dlls or dylibs, or empty string for auto-detection
   function GetLibDir: String;
   // Return directory with MySQL plugin files. Empty on Linux inidicating auto-detection.
+  // Accepts the "plugins" folder of an installation as well as the "plugins64" folder of the build tree.
   function GetPluginDir: String;
   procedure SaveUnicodeFile(Filename: String; Text: String; Encoding: TEncoding);
   procedure OpenTextFile(const Filename: String; out Stream: TFileStream; var Encoding: TEncoding);
@@ -1321,9 +1322,19 @@ begin
 end;
 
 function GetPluginDir: String;
+var
+  dir: String;
 begin
-  Result := GetLibDir;
-  Result := Result + 'plugins' + PathDelim;
+  // The installer renames the 64 bit plugins into a "plugins" folder, whereas the
+  // build tree keeps them in "plugins64". Return whichever of both folders exists,
+  // and an empty string to let the client library auto-detect its location.
+  Result := '';
+  for dir in ['plugins', 'plugins64'] do begin
+    if DirectoryExists(GetLibDir + dir + PathDelim) then begin
+      Result := GetLibDir + dir + PathDelim;
+      break;
+    end;
+  end;
 end;
 
 {**

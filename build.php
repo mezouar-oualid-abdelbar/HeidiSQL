@@ -22,12 +22,13 @@ const APPNAME = 'HeidiSQL';
 const BIN_NAME = 'heidisql'; // file name of main executable
 const DS = DIRECTORY_SEPARATOR;
 const BASE_DIR = __DIR__ . DS;
-const PACKAGE_DIR = 'Delphi12.3';
+const PACKAGE_DIR = 'Delphi13.0';
 const PACKAGE_DIRS_COMPONENTS = [PACKAGE_DIR, 'RAD Studio 10.4+'];
-const STUDIO_DIR = 'C:\\Program Files (x86)\\Embarcadero\\Studio\\23.0\\';
+const STUDIO_DIR = 'C:\\Program Files (x86)\\Embarcadero\\Studio\\37.0\\';
 const COMPILER_DIR = STUDIO_DIR . 'bin\\';
 const LIB_DIR = STUDIO_DIR . 'lib\\';
 const MAD_DIR = 'C:\\Program Files (x86)\\madCollection\\';
+const MAD_BDS_DIR = 'BDS37';
 
 
 function dumpMessage(string $text = '', bool $blankLineAbove = false): void
@@ -69,9 +70,9 @@ function compilerCommand(int $bit, string $outputNameExtension): string
             .BASE_DIR.'source\detours\Source;'
             .BASE_DIR.'source\vcl-styles-utils;'
             .BASE_DIR.'source\sizegrip;'
-            .MAD_DIR.'madExcept\BDS23\win'.$bit.';'
-            .MAD_DIR.'madDisAsm\BDS23\win'.$bit.';'
-            .MAD_DIR.'madBasic\BDS23\win'.$bit.';'
+            .MAD_DIR.'madExcept\\'.MAD_BDS_DIR.'\win'.$bit.';'
+            .MAD_DIR.'madDisAsm\\'.MAD_BDS_DIR.'\win'.$bit.';'
+            .MAD_DIR.'madBasic\\'.MAD_BDS_DIR.'\win'.$bit.';'
             .'"',
         //'-K00400000', // Image-Basisadresse
         '-DmadExcept;DEBUG', // define conditionals

@@ -50,7 +50,9 @@ uses
   SynEditTextBuffer,
   SynEdit,
   SysUtils,
-  Classes;
+  Classes,
+
+   System.RTLConsts;
 
 var
   // Accumulate/hide whitespace at EOL (at end of wrapped rows, actually)
@@ -125,7 +127,7 @@ implementation
 uses
   SynUnicode,
 {$IFDEF SYN_COMPILER_6_UP}
-  RTLConsts,
+//  RTLConsts,
 {$ELSE}
   Consts,
 {$ENDIF}
