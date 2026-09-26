@@ -50,10 +50,7 @@ uses
   SynEditTextBuffer,
   SynEdit,
   SysUtils,
-  Classes,
-//  System.SysUtils,
-//  System.Classes,
-  System.RTLConsts;
+  Classes;
 
 var
   // Accumulate/hide whitespace at EOL (at end of wrapped rows, actually)

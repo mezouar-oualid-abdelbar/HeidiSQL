@@ -5016,7 +5016,7 @@ begin
 
       if Visible then SendMessage(Handle, WM_SETREDRAW, 0, 0);
 
-      if (fScrollBars in [System.UITypes.TScrollStyle.ssBoth, System.UITypes.TScrollStyle.ssHorizontal]) and not WordWrap then
+      if (fScrollBars in [{$IFDEF SYN_COMPILER_17_UP}TScrollStyle.{$ENDIF}ssBoth, {$IFDEF SYN_COMPILER_17_UP}TScrollStyle.{$ENDIF}ssHorizontal]) and not WordWrap then
       begin
         if eoScrollPastEol in Options then
           nMaxScroll := MaxScrollWidth
@@ -11244,13 +11244,13 @@ procedure TCustomSynEdit.DefineProperties(Filer: TFiler);
     if Filer.Ancestor <> nil then
     begin
       Result := not CollectionsEqual(Keystrokes,
-        TCustomSynEdit(Filer.Ancestor).Keystrokes,nil,nil);
+        TCustomSynEdit(Filer.Ancestor).Keystrokes);
     end
     else begin
       iDefKeys := TSynEditKeyStrokes.Create(nil);
       try
         iDefKeys.ResetDefaults;
-        Result := not CollectionsEqual(Keystrokes, iDefKeys,nil,nil);
+        Result := not CollectionsEqual(Keystrokes, iDefKeys);
       finally
         iDefKeys.Free;
       end;

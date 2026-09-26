@@ -7047,7 +7047,7 @@ begin
     repeat
       APieces.Add(System.Copy(AInputStr, PrevPos, MatchPos[0] - PrevPos));
       PrevPos := MatchPos[0] + MatchLen[0];
-    until not ExecNext(false);
+    until not ExecNext;
   APieces.Add(System.Copy(AInputStr, PrevPos, MaxInt)); // Tail
 end; { of procedure TRegExpr.Split
   -------------------------------------------------------------- }
@@ -7069,7 +7069,7 @@ begin
       else
         Result := Result + AReplaceStr;
       PrevPos := MatchPos[0] + MatchLen[0];
-    until not  ExecNext(false);
+    until not ExecNext;
   Result := Result + System.Copy(AInputStr, PrevPos, MaxInt); // Tail
 end; { of function TRegExpr.Replace
   -------------------------------------------------------------- }
@@ -7086,7 +7086,7 @@ begin
       Result := Result + System.Copy(AInputStr, PrevPos, MatchPos[0] - PrevPos)
         + AReplaceFunc(Self);
       PrevPos := MatchPos[0] + MatchLen[0];
-   until not  ExecNext(false);
+    until not ExecNext;
   Result := Result + System.Copy(AInputStr, PrevPos, MaxInt); // Tail
 end; { of function TRegExpr.ReplaceEx
   -------------------------------------------------------------- }
